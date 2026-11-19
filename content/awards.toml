@@ -1,21 +1,20 @@
 type = "card"
 title = "Awards"
+layout = "timeline"
 
 [[items]]
 title = "National Scholarship"
+subtitle = "China"
 date = "2024–2025"
-
-[[items]]
-title = "National Scholarship"
-date = "2022–2023"
-
-[[items]]
-title = "BYD Scholarship"
-date = "2025"
 
 [[items]]
 title = "Grand Prize (Challenge Champion)"
 subtitle = "National Challenge Cup Ranking Challenge"
+date = "2025"
+
+[[items]]
+title = "Grand Prize (Challenge Champion)"
+subtitle = "Capital Challenge Cup"
 date = "2025"
 
 [[items]]
@@ -24,8 +23,7 @@ subtitle = "National Challenge Cup Ranking Challenge"
 date = "2025"
 
 [[items]]
-title = "Grand Prize (Challenge Champion)"
-subtitle = "Capital Challenge Cup"
+title = "BYD Scholarship"
 date = "2025"
 
 [[items]]
@@ -39,11 +37,19 @@ subtitle = "Collegiate Mathematics Competition"
 date = "2024"
 
 [[items]]
+title = "National Scholarship"
+subtitle = "China"
+date = "2022–2023"
+
+[[items]]
 title = "First Prize"
 subtitle = "Collegiate Mathematics Competition"
 date = "2023"
 
 [[items]]
-title = "Undergraduate Scholarship for Academic Excellence"
-subtitle = "Beihang University"
-content = "Special Prize and multiple First Prizes."
+title = "Special Prize and Multiple First Prizes"
+subtitle = "Undergraduate Scholarship for Academic Excellence, Beihang University"
+
+[[items]]
+title = "Second Prize"
+subtitle = "China Software Cup"

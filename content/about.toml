@@ -29,3 +29,27 @@ type = "publications"
 title = "Selected Publications"
 filter = "selected"
 limit = 5
+
+[[sections]]
+id = "projects"
+type = "highlights"
+source = "projects"
+limit = 4
+
+[[sections]]
+id = "internships"
+type = "highlights"
+source = "internships"
+limit = 2
+
+[[sections]]
+id = "awards"
+type = "highlights"
+source = "awards"
+limit = 3
+
+[[sections]]
+id = "mentorship"
+type = "highlights"
+source = "mentorship"
+limit = 2

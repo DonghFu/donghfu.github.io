@@ -4,6 +4,7 @@ import { motion } from 'framer-motion';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import { CardPageConfig } from '@/types/page';
+import AwardsTimeline from '@/components/pages/AwardsTimeline';
 
 const markdownComponents = {
     p: ({ children }: React.ComponentProps<'p'>) => <p className="mb-3 last:mb-0">{children}</p>,
@@ -31,6 +32,10 @@ const markdownComponents = {
 };
 
 export default function CardPage({ config, embedded = false }: { config: CardPageConfig; embedded?: boolean }) {
+    if (config.layout === 'timeline') {
+        return <AwardsTimeline config={config} embedded={embedded} />;
+    }
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -76,6 +81,9 @@ export default function CardPage({ config, embedded = false }: { config: CardPag
                         </div>
                         {item.subtitle && (
                             <p className={`${embedded ? "text-sm" : "text-base"} text-accent font-medium mb-3`}>{item.subtitle}</p>
+                        )}
+                        {item.award && (
+                            <p className="mb-3 text-sm text-primary"><strong>{item.award}</strong></p>
                         )}
                         {item.content && (
                             <div className={`${embedded ? "text-sm" : "text-base"} text-neutral-600 dark:text-neutral-500 leading-relaxed`}>

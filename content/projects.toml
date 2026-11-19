@@ -3,6 +3,7 @@ title = "Projects"
 
 [[items]]
 title = "StarOps"
+award = "Grand Prize (Challenge Champion), National Challenge Cup Ranking Challenge"
 subtitle = "Intelligent operations with two cooperating language models"
 content = """
 StarOps combines metrics, logs, and traces to detect anomalies, diagnose root causes, and support automated recovery. It uses BERT to encode log semantics and Llama to classify incidents with metrics and service topology as context.
@@ -12,9 +13,30 @@ I built the agent interface in React and implemented tool orchestration, memory,
 
 [[items]]
 title = "SkillForge+"
+award = "Second Prize, China Software Cup"
 subtitle = "LLM and RAG platform for training and assessment"
 content = """
 SkillForge+ parses multimodal training materials, generates assessment questions, and recommends personalized exercises. It uses DeepDoc for document extraction and combines BM25 and vector retrieval with reranking.
 
 I deployed Dify and RAGFlow on private infrastructure, adapted DeepDoc for multimodal document parsing, and built a two-stage retrieval-augmented question generation workflow.
+"""
+
+[[items]]
+title = "Changying Yimou"
+subtitle = "Real-time UAV perception on Ascend hardware"
+award = "First Prize, National Challenge Cup Ranking Challenge"
+content = """
+The system combines onboard and edge computing to run real-time detection and higher-level scene interpretation on Ascend hardware. An optimized detector runs onboard. A global–local reasoning pipeline combines the full image with cropped regions, progressing from object detection to detailed recognition and scene-level assessment.
+
+I led the design of the global–local reasoning module, linking YOLO detections to visual evidence of behavior. I combined Qwen-VL’s fine-grained recognition with DeepSeek’s higher-level reasoning to assess likely object behavior in complex scenes. I also used Kling AI to generate synthetic examples of rare operating conditions for training.
+"""
+
+[[items]]
+title = "SilkCake Vision Inspection"
+subtitle = "Real-time industrial silk-cake defect detection with YOLOv5"
+award = "Grand Prize (Challenge Champion), Capital Challenge Cup"
+content = """
+This inspection system detects small and low-texture defects on industrial silk cakes in real time. Copy-Paste augmentation addresses scarce and imbalanced defect samples. SE channel attention and BiFPN improve feature representation and multiscale fusion, while Focal Loss and Normalized Wasserstein Distance (NWD) Loss support classification and bounding box regression.
+
+I evaluated YOLO variants, integrated the SE and BiFPN modules into YOLOv5, and designed the combined loss to improve detection of small and low-texture defects.
 """

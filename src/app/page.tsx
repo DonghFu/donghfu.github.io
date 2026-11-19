@@ -1,22 +1,10 @@
 import { getConfig } from '@/lib/config';
 import { getMarkdownContent, getBibtexContent, getTomlContent, getPageConfig } from '@/lib/content';
 import { parseBibTeX } from '@/lib/bibtexParser';
-import HomePageClient, { type HomePageLocaleData } from '@/components/home/HomePageClient';
+import HomePageClient, { type HomePageLocaleData, type SectionConfig } from '@/components/home/HomePageClient';
 import { Publication } from '@/types/publication';
 import { BasePageConfig, PublicationPageConfig, TextPageConfig, CardPageConfig } from '@/types/page';
 import { getRuntimeI18nConfig } from '@/lib/i18n/config';
-
-interface SectionConfig {
-  id: string;
-  type: 'markdown' | 'publications' | 'list';
-  title?: string;
-  source?: string;
-  filter?: string;
-  limit?: number;
-  content?: string;
-  publications?: Publication[];
-  items?: NewsItem[];
-}
 
 interface NewsItem {
   date: string;
@@ -47,6 +35,15 @@ function processSections(sections: SectionConfig[], locale?: string): SectionCon
           ...section,
           publications: filteredPubs.slice(0, section.limit || 5),
         };
+      }
+      case 'highlights': {
+        const config = section.source ? getPageConfig<CardPageConfig>(section.source, locale) : null;
+        if (config?.type !== 'card') return section;
+
+        const items = config.items.slice(0, section.limit).map(({ title, subtitle, date, award }) => ({
+          title, subtitle, date, award,
+        }));
+        return { ...section, highlights: { title: config.title, items } };
       }
       case 'list': {
         const newsData = section.source ? getTomlContent<{ news: NewsItem[] }>(section.source, locale) : null;

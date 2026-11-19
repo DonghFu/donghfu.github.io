@@ -22,9 +22,11 @@ export interface CardItem {
     tags?: string[];
     link?: string;
     image?: string;
+    award?: string;
 }
 
 export interface CardPageConfig extends BasePageConfig {
     type: 'card';
+    layout?: 'timeline';
     items: CardItem[];
 }

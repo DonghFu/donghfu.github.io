@@ -1,5 +1,7 @@
 'use client';
 
+import Link from 'next/link';
+
 import Profile from '@/components/home/Profile';
 import About from '@/components/home/About';
 import SelectedPublications from '@/components/home/SelectedPublications';
@@ -12,9 +14,9 @@ import { Publication } from '@/types/publication';
 import { CardPageConfig, PublicationPageConfig, TextPageConfig } from '@/types/page';
 import { useLocaleStore } from '@/lib/stores/localeStore';
 
-interface SectionConfig {
+export interface SectionConfig {
   id: string;
-  type: 'markdown' | 'publications' | 'list';
+  type: 'markdown' | 'publications' | 'list' | 'highlights';
   title?: string;
   source?: string;
   filter?: string;
@@ -22,6 +24,7 @@ interface SectionConfig {
   content?: string;
   publications?: Publication[];
   items?: NewsItem[];
+  highlights?: Pick<CardPageConfig, 'title' | 'items'>;
 }
 
 type PageData =
@@ -87,6 +90,32 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
                         enableOnePageMode={data.enableOnePageMode}
                       />
                     );
+                  case 'highlights': {
+                    const highlights = section.highlights;
+                    if (!highlights) return null;
+                    const headingId = `highlights-${section.id}`;
+
+                    return (
+                      <section key={section.id} aria-labelledby={headingId} className="border-t border-neutral-200 pt-6 dark:border-neutral-800">
+                        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                          <h2 id={headingId} className="font-serif text-2xl font-bold text-primary">{highlights.title}</h2>
+                          <Link href={`/${section.source}/`} aria-label={`View all ${highlights.title.toLowerCase()}`} className="text-sm font-medium text-neutral-600 underline-offset-4 hover:underline dark:text-neutral-500">
+                            View all →
+                          </Link>
+                        </div>
+                        <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
+                          {highlights.items.map((item, index) => (
+                            <li key={index} className="py-2.5 text-sm leading-relaxed text-neutral-600 dark:text-neutral-500">
+                              <strong className="text-primary">{item.title}</strong>
+                              {item.subtitle && <> · {item.subtitle}</>}
+                              {item.date && <> <span className="whitespace-nowrap text-xs">({item.date})</span></>}
+                              {item.award && <strong className="block text-primary">{item.award}</strong>}
+                            </li>
+                          ))}
+                        </ul>
+                      </section>
+                    );
+                  }
                   case 'list':
                     return (
                       <News
