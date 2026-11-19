@@ -6,9 +6,14 @@ on:
   workflow_dispatch:
 
 permissions:
+  actions: read
   contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: homepage-pages
+  cancel-in-progress: false
 
 jobs:
   build:
@@ -29,6 +34,42 @@ jobs:
 
       - name: Build site
         run: npm run build
+
+      - name: Save current build assets for future releases
+        uses: actions/upload-artifact@v4
+        with:
+          name: next-static
+          path: ./out/_next/static
+          retention-days: 30
+          if-no-files-found: error
+
+      - name: Restore recent assets referenced by cached pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          previous_runs=$(gh run list --workflow deploy.yml --branch main --status success \
+            --limit 3 --json databaseId --jq '.[].databaseId')
+
+          for run_id in $previous_runs; do
+            artifact=$(gh api "repos/$GITHUB_REPOSITORY/actions/runs/$run_id/artifacts" \
+              --jq '[.artifacts[] | select(.expired == false) | .name] |
+                if any(. == "next-static") then "next-static"
+                elif any(. == "github-pages") then "github-pages"
+                else empty end')
+            if [[ -z "$artifact" ]]; then
+              continue
+            fi
+
+            previous_dir="$RUNNER_TEMP/homepage-assets-$run_id"
+            gh run download "$run_id" --name "$artifact" --dir "$previous_dir"
+            if [[ "$artifact" == "github-pages" ]]; then
+              tar -xf "$previous_dir/artifact.tar" -C "$previous_dir" ./_next/static
+              previous_dir="$previous_dir/_next/static"
+            fi
+
+            # Keep the current release's files when paths coincide.
+            rsync -a --ignore-existing "$previous_dir/" ./out/_next/static/
+          done
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
