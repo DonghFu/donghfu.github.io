@@ -1,0 +1,35 @@
+[site]
+title = "Donghao Fu"
+description = "Academic homepage of Donghao Fu, incoming PhD student at Beihang University."
+favicon = "/favicon.svg"
+
+[author]
+name = "Donghao Fu"
+title = "Incoming PhD Student (2027)"
+institution = "Beihang University"
+avatar = "/bio.jpg"
+
+[social]
+email = "fudonghao@buaa.edu.cn"
+github = "https://github.com/fff9871"
+
+[features]
+enable_likes = false
+enable_one_page_mode = false
+
+[i18n]
+enabled = false
+locales = ["en"]
+default_locale = "en"
+
+[[navigation]]
+title = "About"
+type = "page"
+target = "about"
+href = "/"
+
+[[navigation]]
+title = "Publications"
+type = "page"
+target = "publications"
+href = "/publications/"
