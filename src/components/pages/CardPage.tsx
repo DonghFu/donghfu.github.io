@@ -36,6 +36,8 @@ export default function CardPage({ config, embedded = false }: { config: CardPag
         return <AwardsTimeline config={config} embedded={embedded} />;
     }
 
+    const Title = embedded ? 'h2' : 'h1';
+
     return (
         <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -43,7 +45,7 @@ export default function CardPage({ config, embedded = false }: { config: CardPag
             transition={{ duration: 0.6, delay: 0.4 }}
         >
             <div className={embedded ? "mb-4" : "mb-8"}>
-                <h1 className={`${embedded ? "text-2xl" : "text-4xl"} font-serif font-bold text-primary mb-4`}>{config.title}</h1>
+                <Title className={`${embedded ? "text-2xl" : "text-4xl"} font-serif font-bold text-primary mb-4`}>{config.title}</Title>
                 {config.description && (
                     <div className={`${embedded ? "text-base" : "text-lg"} text-neutral-600 dark:text-neutral-500 max-w-2xl leading-relaxed`}>
                         <ReactMarkdown components={markdownComponents}>

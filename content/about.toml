@@ -38,9 +38,8 @@ limit = 4
 
 [[sections]]
 id = "internships"
-type = "highlights"
+type = "card"
 source = "internships"
-limit = 2
 
 [[sections]]
 id = "awards"
@@ -52,4 +51,3 @@ limit = 3
 id = "mentorship"
 type = "highlights"
 source = "mentorship"
-limit = 2

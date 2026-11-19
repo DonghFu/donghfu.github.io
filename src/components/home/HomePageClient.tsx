@@ -16,7 +16,7 @@ import { useLocaleStore } from '@/lib/stores/localeStore';
 
 export interface SectionConfig {
   id: string;
-  type: 'markdown' | 'publications' | 'list' | 'highlights';
+  type: 'markdown' | 'publications' | 'list' | 'highlights' | 'card';
   title?: string;
   source?: string;
   filter?: string;
@@ -24,7 +24,8 @@ export interface SectionConfig {
   content?: string;
   publications?: Publication[];
   items?: NewsItem[];
-  highlights?: Pick<CardPageConfig, 'title' | 'items'>;
+  highlights?: Pick<CardPageConfig, 'title' | 'items'> & { href?: string };
+  card?: CardPageConfig;
 }
 
 type PageData =
@@ -90,18 +91,26 @@ export default function HomePageClient({ dataByLocale, defaultLocale }: HomePage
                         enableOnePageMode={data.enableOnePageMode}
                       />
                     );
+                  case 'card':
+                    return section.card && (
+                      <section key={section.id} id={section.id} className="scroll-mt-24 border-t border-neutral-200 pt-6 dark:border-neutral-800">
+                        <CardPage config={section.card} embedded />
+                      </section>
+                    );
                   case 'highlights': {
                     const highlights = section.highlights;
                     if (!highlights) return null;
                     const headingId = `highlights-${section.id}`;
 
                     return (
-                      <section key={section.id} aria-labelledby={headingId} className="border-t border-neutral-200 pt-6 dark:border-neutral-800">
+                      <section key={section.id} id={highlights.href ? undefined : section.id} aria-labelledby={headingId} className="scroll-mt-24 border-t border-neutral-200 pt-6 dark:border-neutral-800">
                         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
                           <h2 id={headingId} className="font-serif text-2xl font-bold text-primary">{highlights.title}</h2>
-                          <Link href={`/${section.source}/`} aria-label={`View all ${highlights.title.toLowerCase()}`} className="text-sm font-medium text-neutral-600 underline-offset-4 hover:underline dark:text-neutral-500">
-                            View all →
-                          </Link>
+                          {highlights.href && (
+                            <Link href={highlights.href} aria-label={`View all ${highlights.title.toLowerCase()}`} className="text-sm font-medium text-neutral-600 underline-offset-4 hover:underline dark:text-neutral-500">
+                              View all →
+                            </Link>
+                          )}
                         </div>
                         <ul className="divide-y divide-neutral-200 dark:divide-neutral-800">
                           {highlights.items.map((item, index) => (

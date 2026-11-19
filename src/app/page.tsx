@@ -1,4 +1,4 @@
-import { getConfig } from '@/lib/config';
+import { getConfig, type SiteConfig } from '@/lib/config';
 import { getMarkdownContent, getBibtexContent, getTomlContent, getPageConfig } from '@/lib/content';
 import { parseBibTeX } from '@/lib/bibtexParser';
 import HomePageClient, { type HomePageLocaleData, type SectionConfig } from '@/components/home/HomePageClient';
@@ -17,7 +17,7 @@ type PageData =
   | { type: 'text'; id: string; config: TextPageConfig; content: string }
   | { type: 'card'; id: string; config: CardPageConfig };
 
-function processSections(sections: SectionConfig[], locale?: string): SectionConfig[] {
+function processSections(sections: SectionConfig[], navigation: SiteConfig['navigation'], locale?: string): SectionConfig[] {
   return sections.map((section: SectionConfig) => {
     switch (section.type) {
       case 'markdown':
@@ -36,6 +36,10 @@ function processSections(sections: SectionConfig[], locale?: string): SectionCon
           publications: filteredPubs.slice(0, section.limit || 5),
         };
       }
+      case 'card': {
+        const config = section.source ? getPageConfig<CardPageConfig>(section.source, locale) : null;
+        return config?.type === 'card' ? { ...section, card: config } : section;
+      }
       case 'highlights': {
         const config = section.source ? getPageConfig<CardPageConfig>(section.source, locale) : null;
         if (config?.type !== 'card') return section;
@@ -43,7 +47,8 @@ function processSections(sections: SectionConfig[], locale?: string): SectionCon
         const items = config.items.slice(0, section.limit).map(({ title, subtitle, date, award }) => ({
           title, subtitle, date, award,
         }));
-        return { ...section, highlights: { title: config.title, items } };
+        const href = navigation.find((item) => item.type === 'page' && item.target === section.source)?.href;
+        return { ...section, highlights: { title: config.title, items, href } };
       }
       case 'list': {
         const newsData = section.source ? getTomlContent<{ news: NewsItem[] }>(section.source, locale) : null;
@@ -80,7 +85,7 @@ function loadPageDataForLocale(locale: string | undefined): HomePageLocaleData {
           return {
             type: 'about',
             id: item.target,
-            sections: processSections((rawConfig as { sections: SectionConfig[] }).sections || [], locale),
+            sections: processSections((rawConfig as { sections: SectionConfig[] }).sections || [], localeConfig.navigation, locale),
           } as PageData;
         }
 
@@ -120,7 +125,7 @@ function loadPageDataForLocale(locale: string | undefined): HomePageLocaleData {
     pagesToShow = [{
       type: 'about',
       id: 'about',
-      sections: processSections(aboutConfig.sections || [], locale),
+      sections: processSections(aboutConfig.sections || [], localeConfig.navigation, locale),
     }];
   }
 
