@@ -1,0 +1,16 @@
+type = "card"
+title = "Internships"
+
+[[items]]
+title = "China Telecom AI (TeleAI)"
+subtitle = "Research and Development Intern"
+date = "Oct 2026–Present"
+content = "Semantic Technology R&D Center, Xingchen AGI Lab."
+image = "/logos/teleai.svg"
+
+[[items]]
+title = "ByteDance · Douyin"
+subtitle = "LLM Evaluation Intern"
+date = "Jul–Sep 2026"
+content = "Worked on large language model evaluation in Douyin R&D."
+image = "/logos/bytedance.svg"

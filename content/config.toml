@@ -1,6 +1,6 @@
 [site]
 title = "Donghao Fu"
-description = "Academic homepage of Donghao Fu, incoming PhD student at Beihang University."
+description = "Academic homepage of Donghao Fu, incoming PhD student in the Beihang University–Huawei joint program."
 favicon = "/favicon.svg"
 
 [author]
@@ -33,3 +33,27 @@ title = "Publications"
 type = "page"
 target = "publications"
 href = "/publications/"
+
+[[navigation]]
+title = "Projects"
+type = "page"
+target = "projects"
+href = "/projects/"
+
+[[navigation]]
+title = "Internships"
+type = "page"
+target = "internships"
+href = "/internships/"
+
+[[navigation]]
+title = "Awards"
+type = "page"
+target = "awards"
+href = "/awards/"
+
+[[navigation]]
+title = "Mentorship"
+type = "page"
+target = "mentorship"
+href = "/mentorship/"

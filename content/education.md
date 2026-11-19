@@ -1,0 +1,2 @@
+- **2027 onward · Beihang University and Huawei** — Incoming PhD student in the joint program with Beihang's School of Artificial Intelligence.
+- **2022–2027 · Beihang University** — Undergraduate studies, School of Software.

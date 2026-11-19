@@ -1,2 +1,20 @@
 type = "card"
 title = "Projects"
+
+[[items]]
+title = "StarOps"
+subtitle = "Intelligent operations with two cooperating language models"
+content = """
+StarOps combines metrics, logs, and traces to detect anomalies, diagnose root causes, and support automated recovery. It uses BERT to encode log semantics and Llama to classify incidents with metrics and service topology as context.
+
+I built the agent interface in React and implemented tool orchestration, memory, and session-state management. I also helped adapt the deployment to the target operating system and integrated tools for operational risk reporting.
+"""
+
+[[items]]
+title = "SkillForge+"
+subtitle = "LLM and RAG platform for training and assessment"
+content = """
+SkillForge+ parses multimodal training materials, generates assessment questions, and recommends personalized exercises. It uses DeepDoc for document extraction and combines BM25 and vector retrieval with reranking.
+
+I deployed Dify and RAGFlow on private infrastructure, adapted DeepDoc for multimodal document parsing, and built a two-stage retrieval-augmented question generation workflow.
+"""

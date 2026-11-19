@@ -18,6 +18,12 @@ source = "bio.md"
 title = "About"
 
 [[sections]]
+id = "education"
+type = "markdown"
+source = "education.md"
+title = "Education"
+
+[[sections]]
 id = "featured_publications"
 type = "publications"
 title = "Selected Publications"
