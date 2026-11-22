@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#10191b">
+  <meta name="description" content="反无人机项目的离线视觉评测工作台。导入兼容的 YOLO ONNX 模型，使用带标注的图片评测六项指标，查看对比并导出报告。">
+  <title>FW · 反无人机视觉评测工作台</title>
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+  <header class="masthead">
+    <div class="shell masthead-inner">
+      <span class="brand"><span class="brand-mark" aria-hidden="true">FW</span> 反无人机项目</span>
+      <a class="repo" href="https://github.com/MitakeMoca/fw">GitHub 仓库</a>
+    </div>
+  </header>
+
+  <main class="shell">
+    <section class="hero" aria-labelledby="hero-title">
+      <div>
+        <p class="eyebrow" lang="en">YOLO / ONNX</p>
+        <h1 id="hero-title">反无人机<span>视觉评测工作台</span></h1>
+      </div>
+      <p class="hero-description">在同一个工作台导入不同的 YOLO ONNX 模型，使用带标注的图片完成离线评测。从模型接入到结果可视化与报告导出，覆盖完整评测流程。</p>
+    </section>
+
+    <section class="summary" aria-labelledby="workflow-title">
+      <div class="section-heading">
+        <h2 id="workflow-title">端到端评测流程</h2>
+      </div>
+      <ol class="workflow">
+        <li><strong>导入模型</strong><span>选择已注册的模型，或上传兼容的单文件 YOLO ONNX，配置输出格式与类别。</span></li>
+        <li><strong>准备评测数据</strong><span>上传批量图片及目标框标注与分组，或从工作台选择已配置的验证集。</span></li>
+        <li><strong>运行推理与评测</strong><span>将预测与真值匹配，计算评测指标。配置 CUDA 后，可用 NVIDIA GPU 并行推理。</span></li>
+        <li><strong>查看与导出结果</strong><span>查看指标图表和逐图明细。固定验证集可查看真值与预测对照，并导出 JSON 报告。</span></li>
+      </ol>
+    </section>
+
+    <section class="summary" aria-labelledby="metrics-title">
+      <div class="section-heading">
+        <h2 id="metrics-title">六项评测指标</h2>
+        <p class="run-info">批量图片评测</p>
+      </div>
+      <dl class="metrics">
+        <div><dt>识别率</dt><dd>按真值框匹配统计召回率，同时查看精确率和 F1。</dd></div>
+        <div><dt>计算量</dt><dd>基于模型输入尺寸，静态估算 ONNX 主要算子的 MAC。</dd></div>
+        <div><dt>参数量</dt><dd>统计 ONNX 图中可识别的权重与偏置，共享张量计一次。</dd></div>
+        <div><dt>场景数</dt><dd>按标注中的场景字段统计覆盖场景，查看各场景的样本量。</dd></div>
+        <div><dt>鲁棒性</dt><dd>启用噪声复测后，比较同一批图片受扰动前后的召回率。</dd></div>
+        <div><dt>泛化性</dt><dd>比较有标注的参考集与留出集，报告两组召回率差值。</dd></div>
+      </dl>
+      <p class="section-note">识别率、场景数、鲁棒性和泛化性依赖对应标注、场景字段或数据划分。固定验证集另提供 mAP@0.50 和逐类别明细。</p>
+    </section>
+
+    <section aria-labelledby="examples-title">
+      <div class="section-heading">
+        <h2 id="examples-title">检测输出示例</h2>
+        <p class="run-info">YOLO26n · COCO · 置信度 ≥ 0.35</p>
+      </div>
+      <p class="section-note">以下两组公开街景素材展示工作台如何标出目标位置、类别和置信度。工作台也可输出带框视频与逐帧检测记录。</p>
+
+      <article class="comparison">
+        <h3>城市场景 <span>公交与行人</span></h3>
+        <div class="pair">
+          <figure>
+            <figcaption><span>检测前</span><span lang="en">INPUT</span></figcaption>
+            <img src="./assets/bus-input.webp" width="1280" height="849" alt="伦敦街头的双层公交车和等候上车的行人">
+          </figure>
+          <figure class="prediction">
+            <figcaption><span>检测后</span><span lang="en">PREDICTION</span></figcaption>
+            <img src="./assets/bus-result.webp" width="1280" height="849" alt="同一张图上的公交车与行人带有检测框和置信度标签">
+          </figure>
+        </div>
+        <p class="credit">摄影 <a href="https://commons.wikimedia.org/wiki/File:View_of_passengers_boarding_a_bus_on_Upper_Street_-_geograph.org.uk_-_5504552.jpg">Robert Lamb</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · 图片经缩放，右图叠加模型预测框。</p>
+      </article>
+
+      <article class="comparison">
+        <h3>路口场景 <span>自行车与车辆</span></h3>
+        <div class="pair">
+          <figure>
+            <figcaption><span>检测前</span><span lang="en">INPUT</span></figcaption>
+            <img src="./assets/cycle-input.webp" width="1280" height="960" loading="lazy" alt="柏林路口一名骑行者经过等候的汽车">
+          </figure>
+          <figure class="prediction">
+            <figcaption><span>检测后</span><span lang="en">PREDICTION</span></figcaption>
+            <img src="./assets/cycle-result.webp" width="1280" height="960" loading="lazy" alt="模型在同一张图上标出了自行车、骑行者和车辆">
+          </figure>
+        </div>
+        <p class="credit">摄影 <a href="https://commons.wikimedia.org/wiki/File:Frau_auf_Fahrrad_in_Berlin.jpg">Sascha Kohlmann</a> · <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC BY-SA 2.0</a> · 图片经缩放，右图叠加模型预测框。</p>
+      </article>
+    </section>
+
+  </main>
+
+  <footer class="shell footer">
+    <span>FW · 项目展示</span>
+    <a href="https://github.com/MitakeMoca/fw#readme">部署与模型配置文档</a>
+  </footer>
+</body>
+</html>
