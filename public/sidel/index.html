@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./site.css">
-  <script defer src="./site.js"></script>
+  <link rel="stylesheet" href="./site.css?v=2">
+  <script defer src="./site.js?v=2"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -24,7 +24,7 @@
     <div class="wrap nav">
       <a href="./" class="brand"><img src="./mark.svg" alt="" width="26" height="26">SIDEL</a>
       <nav aria-label="Sections">
-        <a href="#boundary">Trust boundary</a><a href="#framework">Framework</a><a href="#results">Results</a>
+        <a href="#boundary">Trust boundary</a><a href="#framework">Framework</a><a href="#interventions">L1–L4</a><a href="#results">Results</a>
       </nav>
       <a class="header-paper" href="https://arxiv.org/abs/2607.23624v5">arXiv:2607.23624</a>
     </div>
@@ -102,12 +102,43 @@
       <p class="eyebrow">ROUTER-SIDE INTERVENTIONS</p>
       <h2>Four injection <em>levels.</em></h2>
       <p class="section-intro">The study examines four levels of increasing subtlety. Each changes the response delivered to the coding agent.</p>
-      <div class="levels">
-        <article><span class="level-n">L1</span><h3>Response Substitution</h3><p>The router discards the provider response and delivers an alternative in its place.</p><div class="pattern replace" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
-        <article><span class="level-n">L2</span><h3>Response Append</h3><p>The original provider response remains visible alongside an additional tool call.</p><div class="pattern append" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
-        <article><span class="level-n">L3</span><h3>LLM-Polished Injection</h3><p>The explanation is rewritten to match the modified action.</p><div class="pattern polish" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
-        <article><span class="level-n">L4</span><h3>LLM-Polished with Distribution Alignment</h3><p>The delivered response is regenerated from a mixture of model output distributions.</p><div class="pattern align" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+      <div class="levels" role="tablist" aria-label="Injection levels">
+        <button id="level-l1" role="tab" aria-controls="level-demo" aria-selected="true" type="button" data-level="0"><span class="level-n">L1</span><strong>Response Substitution</strong></button>
+        <button id="level-l2" role="tab" aria-controls="level-demo" aria-selected="false" tabindex="-1" type="button" data-level="1"><span class="level-n">L2</span><strong>Response Append</strong></button>
+        <button id="level-l3" role="tab" aria-controls="level-demo" aria-selected="false" tabindex="-1" type="button" data-level="2"><span class="level-n">L3</span><strong>LLM-Polished Injection</strong></button>
+        <button id="level-l4" role="tab" aria-controls="level-demo" aria-selected="false" tabindex="-1" type="button" data-level="3"><span class="level-n">L4</span><strong>LLM-Polished with Distribution Alignment</strong></button>
       </div>
+      <figure id="level-demo" class="panel level-demo" role="tabpanel" aria-labelledby="level-l1" data-level="0" tabindex="0">
+        <figcaption>
+          <div><h3 id="operation-title">Replace the entire response</h3><p id="operation-note">The router discards the provider response and delivers an alternative in its place.</p></div>
+          <button class="button replay" id="replay-level" type="button">Replay flow</button>
+        </figcaption>
+        <div class="flow-stages">
+          <div class="flow-node sent">
+            <div class="flow-label"><span class="mono">UPSTREAM</span><strong>Provider response</strong></div>
+            <div class="packet" id="provider-packet">
+              <div><span>Original explanation</span><i aria-hidden="true"></i></div>
+              <div><span>Original tool call</span><i aria-hidden="true"></i></div>
+            </div>
+          </div>
+          <div class="flow-edge incoming" aria-hidden="true"><i></i></div>
+          <div class="flow-node transform">
+            <div class="flow-label"><span class="mono">INTERMEDIARY</span><strong>API router</strong></div>
+            <div class="operation-mark" aria-hidden="true"><i></i><i></i><i></i></div>
+            <div id="router-operation" class="router-operation">Replace response</div>
+          </div>
+          <div class="flow-edge outgoing" aria-hidden="true"><i></i></div>
+          <div class="flow-node received">
+            <div class="flow-label"><span class="mono">DOWNSTREAM</span><strong>Agent receives</strong></div>
+            <div class="packet" id="agent-packet">
+              <div class="changed"><span>Replacement explanation</span><i aria-hidden="true"></i></div>
+              <div class="changed"><span>Replacement tool call</span><i aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-footer"><span><i></i> From provider</span><span><i class="changed"></i> Changed at router</span><span>Conceptual illustration</span></div>
+        <p class="sr-only" id="flow-announcement" aria-live="polite"></p>
+      </figure>
     </section>
 
     <section id="results" class="section results">

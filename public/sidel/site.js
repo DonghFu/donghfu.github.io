@@ -38,31 +38,100 @@ bindButtons("trace", mode => {
     : "The agent receives the provider’s response and acts on its original instruction.";
 });
 
-const tabs = [...document.querySelectorAll('[role="tab"]')];
-function selectTab(selected) {
-  tabs.forEach(tab => {
-    const active = tab === selected;
-    tab.setAttribute("aria-selected", String(active));
-    tab.tabIndex = active ? 0 : -1;
-    document.getElementById(tab.getAttribute("aria-controls")).hidden = !active;
+function bindTabs(selector, update) {
+  const tabs = [...document.querySelectorAll(selector)];
+  function select(selected) {
+    tabs.forEach(tab => {
+      const active = tab === selected;
+      tab.setAttribute("aria-selected", String(active));
+      tab.tabIndex = active ? 0 : -1;
+    });
+    update(selected);
+  }
+
+  tabs.forEach((tab, index) => {
+    tab.addEventListener("click", () => select(tab));
+    tab.addEventListener("keydown", event => {
+      const targets = {
+        ArrowLeft: (index + tabs.length - 1) % tabs.length,
+        ArrowRight: (index + 1) % tabs.length,
+        Home: 0,
+        End: tabs.length - 1
+      };
+      if (!(event.key in targets)) return;
+      event.preventDefault();
+      const target = tabs[targets[event.key]];
+      select(target);
+      target.focus();
+    });
   });
 }
-tabs.forEach((tab, index) => {
-  tab.addEventListener("click", () => selectTab(tab));
-  tab.addEventListener("keydown", event => {
-    const targets = {
-      ArrowLeft: (index + tabs.length - 1) % tabs.length,
-      ArrowRight: (index + 1) % tabs.length,
-      Home: 0,
-      End: tabs.length - 1
-    };
-    if (!(event.key in targets)) return;
-    event.preventDefault();
-    const target = tabs[targets[event.key]];
-    selectTab(target);
-    target.focus();
+
+bindTabs(".results-tabs [role=tab]", selected => {
+  document.querySelectorAll(".result-panel").forEach(panel => {
+    panel.hidden = panel.id !== selected.getAttribute("aria-controls");
   });
 });
+
+const injections = [
+  {
+    title: "Replace the entire response",
+    note: "The router discards the provider response and delivers an alternative in its place.",
+    operation: "Replace response",
+    output: [["Replacement explanation", true], ["Replacement tool call", true]]
+  },
+  {
+    title: "Append a tool call",
+    note: "The original provider response remains visible alongside an additional tool call.",
+    operation: "Append action",
+    output: [["Original explanation", false], ["Original tool call", false], ["Additional tool call", true]]
+  },
+  {
+    title: "Rewrite the explanation",
+    note: "The explanation is rewritten to match the modified action.",
+    operation: "Rewrite explanation and action",
+    output: [["Rewritten explanation", true], ["Modified tool call", true]]
+  },
+  {
+    title: "Regenerate the response",
+    note: "The delivered response is regenerated from a mixture of model output distributions.",
+    operation: "Regenerate response",
+    output: [["Regenerated explanation", true], ["Regenerated tool call", true]]
+  }
+];
+
+const levelDemo = document.getElementById("level-demo");
+let replayFrame;
+function replayFlow() {
+  levelDemo.classList.remove("playing");
+  cancelAnimationFrame(replayFrame);
+  replayFrame = requestAnimationFrame(() => {
+    replayFrame = requestAnimationFrame(() => levelDemo.classList.add("playing"));
+  });
+}
+
+bindTabs(".levels [role=tab]", selected => {
+  const { title, note, operation, output } = injections[Number(selected.dataset.level)];
+  levelDemo.setAttribute("aria-labelledby", selected.id);
+  levelDemo.dataset.level = selected.dataset.level;
+  document.getElementById("operation-title").textContent = title;
+  document.getElementById("operation-note").textContent = note;
+  document.getElementById("router-operation").textContent = operation;
+  document.getElementById("agent-packet").innerHTML = output.map(([label, changed]) =>
+    `<div${changed ? ' class="changed"' : ''}><span>${label}</span><i aria-hidden="true"></i></div>`
+  ).join("");
+  document.getElementById("flow-announcement").textContent = `${title}. Agent receives: ${output.map(([label]) => label).join(", ")}.`;
+  replayFlow();
+});
+
+document.getElementById("replay-level").addEventListener("click", replayFlow);
+const flowObserver = new IntersectionObserver(entries => {
+  if (entries.some(entry => entry.isIntersecting)) {
+    replayFlow();
+    flowObserver.disconnect();
+  }
+}, { threshold: .25 });
+flowObserver.observe(levelDemo);
 
 function renderAgents(metric) {
   const format = {
