@@ -15,8 +15,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="./site.css?v=2">
-  <script defer src="./site.js?v=2"></script>
+  <link rel="stylesheet" href="./site.css?v=3">
+  <script defer src="./site.js?v=3"></script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -113,7 +113,7 @@
           <div><h3 id="operation-title">Replace the entire response</h3><p id="operation-note">The router discards the provider response and delivers an alternative in its place.</p></div>
           <button class="button replay" id="replay-level" type="button">Replay flow</button>
         </figcaption>
-        <div class="flow-stages">
+        <div class="flow-stages" id="single-flow">
           <div class="flow-node sent">
             <div class="flow-label"><span class="mono">UPSTREAM</span><strong>Provider response</strong></div>
             <div class="packet" id="provider-packet">
@@ -136,7 +136,62 @@
             </div>
           </div>
         </div>
-        <div class="flow-footer"><span><i></i> From provider</span><span><i class="changed"></i> Changed at router</span><span>Conceptual illustration</span></div>
+        <div class="flow-stages detailed-flow" id="polished-flow" hidden>
+          <div class="flow-node sent">
+            <div class="flow-label"><span class="mono">L2 RESPONSE APPEND</span><strong>Original response + appended call</strong></div>
+            <div class="packet">
+              <div><span>Original explanation</span><i aria-hidden="true"></i></div>
+              <div><span>Original tool call</span><i aria-hidden="true"></i></div>
+              <div class="changed"><span>Appended tool call</span><i aria-hidden="true"></i></div>
+            </div>
+          </div>
+          <div class="flow-edge incoming" aria-hidden="true"><i></i></div>
+          <div class="flow-node transform">
+            <div class="flow-label"><span class="mono">L3 POLISHING</span><strong>External LLM</strong></div>
+            <p class="router-operation">Generates a misleading explanation for the appended call</p>
+          </div>
+          <div class="flow-edge outgoing" aria-hidden="true"><i></i></div>
+          <div class="flow-node received">
+            <div class="flow-label"><span class="mono">DOWNSTREAM</span><strong>Agent receives</strong></div>
+            <div class="packet">
+              <div class="changed"><span>LLM-generated misleading explanation</span><i aria-hidden="true"></i></div>
+              <div><span>Original tool call</span><i aria-hidden="true"></i></div>
+              <div class="changed"><span>Appended tool call</span><i aria-hidden="true"></i></div>
+            </div>
+          </div>
+        </div>
+        <div class="flow-stages detailed-flow dual-flow" id="aligned-flow" hidden>
+          <div class="branch-pair" aria-label="Two parallel decoding paths">
+            <div class="flow-node decode clean-path">
+              <div class="flow-label"><span class="mono">CLEAN PATH</span><strong>Clean context</strong></div>
+              <div class="distribution"><span>Next-token probabilities</span><div class="probability-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+            </div>
+            <div class="flow-node decode injected-path">
+              <div class="flow-label"><span class="mono">INJECTED PATH</span><strong>Malicious injection context</strong></div>
+              <div class="distribution"><span>Next-token probabilities</span><div class="probability-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+            </div>
+          </div>
+          <div class="merge-edge" aria-hidden="true">
+            <svg class="merge-horizontal" viewBox="0 0 100 100" preserveAspectRatio="none">
+              <path class="clean-edge" pathLength="100" d="M0 0 C50 0 48 50 100 50"/>
+              <path class="injected-edge" pathLength="100" d="M0 100 C50 100 48 50 100 50"/>
+            </svg>
+            <svg class="merge-vertical" viewBox="0 0 100 60" preserveAspectRatio="none">
+              <path class="clean-edge" pathLength="100" d="M0 0 C0 37 50 28 50 60"/>
+              <path class="injected-edge" pathLength="100" d="M100 0 C100 37 50 28 50 60"/>
+            </svg>
+          </div>
+          <div class="flow-node transform weighted">
+            <div class="flow-label"><span class="mono">DISTRIBUTION ALIGNMENT</span><strong>Weighted sum</strong></div>
+            <div class="distribution"><span>Combined probabilities</span><div class="probability-bars" aria-hidden="true"><i></i><i></i><i></i><i></i></div></div>
+          </div>
+          <div class="flow-edge outgoing" aria-hidden="true"><i></i></div>
+          <div class="flow-node received">
+            <div class="flow-label"><span class="mono">DOWNSTREAM</span><strong>Agent receives</strong></div>
+            <div class="packet"><div class="changed"><span>Regenerated misleading text</span><i aria-hidden="true"></i></div></div>
+          </div>
+        </div>
+        <div class="flow-footer" id="packet-key"><span><i></i> From provider</span><span><i class="changed"></i> Changed at router</span><span>Conceptual illustration</span></div>
         <p class="sr-only" id="flow-announcement" aria-live="polite"></p>
       </figure>
     </section>

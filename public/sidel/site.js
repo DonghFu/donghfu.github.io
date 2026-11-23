@@ -87,16 +87,16 @@ const injections = [
     output: [["Original explanation", false], ["Original tool call", false], ["Additional tool call", true]]
   },
   {
-    title: "Rewrite the explanation",
-    note: "The explanation is rewritten to match the modified action.",
-    operation: "Rewrite explanation and action",
-    output: [["Rewritten explanation", true], ["Modified tool call", true]]
+    title: "Polish the appended tool call",
+    note: "L3 builds on L2. An external LLM generates misleading text that makes the appended tool call seem like part of the task.",
+    flow: "polished-flow",
+    summary: "Original tool call, appended tool call and an external LLM’s misleading explanation."
   },
   {
-    title: "Regenerate the response",
-    note: "The delivered response is regenerated from a mixture of model output distributions.",
-    operation: "Regenerate response",
-    output: [["Regenerated explanation", true], ["Regenerated tool call", true]]
+    title: "Dual-path decoding",
+    note: "The same model runs along two paths, one with clean context and one with malicious injection context. Their next-token probabilities are combined in a weighted sum to produce the misleading text.",
+    flow: "aligned-flow",
+    summary: "Misleading text generated from the weighted combination of both paths."
   }
 ];
 
@@ -111,16 +111,21 @@ function replayFlow() {
 }
 
 bindTabs(".levels [role=tab]", selected => {
-  const { title, note, operation, output } = injections[Number(selected.dataset.level)];
+  const { title, note, operation, output, flow = "single-flow", summary } = injections[Number(selected.dataset.level)];
   levelDemo.setAttribute("aria-labelledby", selected.id);
   levelDemo.dataset.level = selected.dataset.level;
   document.getElementById("operation-title").textContent = title;
   document.getElementById("operation-note").textContent = note;
-  document.getElementById("router-operation").textContent = operation;
-  document.getElementById("agent-packet").innerHTML = output.map(([label, changed]) =>
-    `<div${changed ? ' class="changed"' : ''}><span>${label}</span><i aria-hidden="true"></i></div>`
-  ).join("");
-  document.getElementById("flow-announcement").textContent = `${title}. Agent receives: ${output.map(([label]) => label).join(", ")}.`;
+  levelDemo.querySelectorAll(".flow-stages").forEach(diagram => { diagram.hidden = diagram.id !== flow; });
+  document.getElementById("packet-key").hidden = flow === "aligned-flow";
+  if (output) {
+    document.getElementById("router-operation").textContent = operation;
+    document.getElementById("agent-packet").innerHTML = output.map(([label, changed]) =>
+      `<div${changed ? ' class="changed"' : ''}><span>${label}</span><i aria-hidden="true"></i></div>`
+    ).join("");
+  }
+  const description = summary ?? output.map(([label]) => label).join(", ") + ".";
+  document.getElementById("flow-announcement").textContent = `${title}. Agent receives: ${description}`;
   replayFlow();
 });
 
