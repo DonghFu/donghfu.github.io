@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090c0b">
+  <title>SIDEL — The cost of third-party API routers</title>
+  <meta name="description" content="Where Is the Cost of Third-Party API Routers in Agentic Software Development? Explore SIDEL, the intervention taxonomy, and the results across four coding agents.">
+  <meta property="og:title" content="SIDEL — The cost of third-party API routers">
+  <meta property="og:description" content="Four coding agents. Four injection levels. 0% defense success without additional mitigations.">
+  <meta property="og:image" content="https://donghfu.github.io/sidel/router.webp">
+  <meta property="og:url" content="https://donghfu.github.io/sidel/">
+  <link rel="canonical" href="https://donghfu.github.io/sidel/">
+  <link rel="icon" href="./mark.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&family=DM+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="./site.css">
+  <script defer src="./site.js"></script>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+  <header class="site-header">
+    <div class="wrap nav">
+      <a href="./" class="brand"><img src="./mark.svg" alt="" width="26" height="26">SIDEL</a>
+      <nav aria-label="Sections">
+        <a href="#boundary">Trust boundary</a><a href="#framework">Framework</a><a href="#results">Results</a>
+      </nav>
+      <a class="header-paper" href="https://arxiv.org/abs/2607.23624v5">arXiv:2607.23624</a>
+    </div>
+  </header>
+  <main id="main">
+    <section class="hero wrap" aria-labelledby="paper-title">
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="signal"></span> SOFTWARE ENGINEERING SECURITY</p>
+        <h1 id="paper-title">Where Is the Cost of <em>Third-Party API Routers</em> in Agentic Software Development?</h1>
+        <p class="lede">A third-party router can change what a coding agent receives and what it executes in your repository.</p>
+        <p class="authors">Donghao Fu<span>*</span>, Jingxin Li<span>*</span>, Xue Jiang, and Yihong Dong</p>
+        <div class="actions">
+          <a class="button primary" href="https://arxiv.org/abs/2607.23624v5">Read the paper</a>
+          <a class="button" href="#results">Explore the results</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="art-top"><span>PROVIDER OUTPUT</span><span>AGENT INPUT</span></div>
+        <div class="art-bottom"><i></i> RESPONSE PATH <b>THIRD-PARTY ROUTER</b></div>
+      </div>
+      <div class="stats">
+        <div><strong class="danger">0%</strong><span>Defense success without<br>additional mitigations</span></div>
+        <div><strong>4</strong><span>Coding agents<br>evaluated</span></div>
+        <div><strong>4</strong><span>Intervention<br>levels</span></div>
+        <div><strong>400</strong><span>Curated tool-call<br>samples</span></div>
+      </div>
+    </section>
+
+    <section id="boundary" class="wrap section split">
+      <div>
+        <p class="eyebrow">THE TRUST BOUNDARY</p>
+        <h2>One path.<br><em>Two responses.</em></h2>
+        <p>Third-party API routers unify access to model providers. Their position also gives them plaintext access to the requests and responses that drive agent actions.</p>
+        <p>The provider can return a benign answer while the agent receives a modified response. The resulting execution can diverge from what the provider intended.</p>
+      </div>
+      <figure class="panel trace" id="trace" data-state="modified">
+        <figcaption><span>Response path</span><span class="muted">Conceptual illustration</span></figcaption>
+        <div class="segmented" role="group" aria-label="Response path mode">
+          <button type="button" data-trace="clean" aria-pressed="false">Forwarded</button>
+          <button type="button" data-trace="modified" aria-pressed="true">Modified</button>
+        </div>
+        <div class="path">
+          <div><small>UPSTREAM</small><strong>LLM provider</strong><span>Original response</span></div>
+          <div class="path-link" aria-hidden="true"></div>
+          <div class="router"><small>INTERMEDIARY</small><strong>API router</strong><span id="router-state">Response modified</span></div>
+          <div class="path-link downstream" aria-hidden="true"></div>
+          <div><small>DOWNSTREAM</small><strong>Coding agent</strong><span id="agent-state">Different action</span></div>
+        </div>
+        <p class="trace-note" id="trace-note" aria-live="polite">The agent acts on the response it receives. The provider’s original action and the executed action can differ.</p>
+      </figure>
+    </section>
+
+    <section id="framework" class="framework section">
+      <div class="wrap">
+        <p class="eyebrow">EXPERIMENTAL FRAMEWORK</p>
+        <h2>Inside <em>SIDEL</em></h2>
+        <p class="section-intro">SIDEL records and replays coding-agent runs, isolating the router’s effect on the response and the resulting repository action.</p>
+        <div class="architecture panel" role="group" aria-label="SIDEL components">
+          <div class="manager"><span class="mono accent">MANAGER</span><strong>Plan, configure, analyze</strong><span>Coordinates task runs and collects traces</span></div>
+          <div class="branch" aria-hidden="true"></div>
+          <div class="arch-grid">
+            <article><p class="mono">UPSTREAM</p><h3>Model providers</h3><p>Return the original provider response.</p></article>
+            <article class="focus"><p class="mono">SHARED ROUTER</p><h3>Record &amp; replay</h3><p>Captures the provider and agent-facing responses. Supports proxy-record, replay and replay-inject.</p></article>
+            <article><p class="mono">EXECUTION HARNESS</p><h3>Task containers</h3><p>Run coding agents in isolated repository environments and capture execution outcomes.</p></article>
+          </div>
+        </div>
+        <div class="dataset">
+          <div><h3>400 samples</h3><p>Balanced across four threat categories and evaluated on three SWE-bench Lite tasks.</p></div>
+          <dl><div><dt>Malicious code execution</dt><dd>100</dd></div><div><dt>Buggy code generation</dt><dd>100</dd></div><div><dt>Privacy exfiltration</dt><dd>100</dd></div><div><dt>Supply-chain attack</dt><dd>100</dd></div></dl>
+        </div>
+      </div>
+    </section>
+
+    <section id="interventions" class="wrap section">
+      <p class="eyebrow">ROUTER-SIDE INTERVENTIONS</p>
+      <h2>Four injection <em>levels.</em></h2>
+      <p class="section-intro">The study examines four levels of increasing subtlety. Each changes the response delivered to the coding agent.</p>
+      <div class="levels">
+        <article><span class="level-n">L1</span><h3>Response Substitution</h3><p>The router discards the provider response and delivers an alternative in its place.</p><div class="pattern replace" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        <article><span class="level-n">L2</span><h3>Response Append</h3><p>The original provider response remains visible alongside an additional tool call.</p><div class="pattern append" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        <article><span class="level-n">L3</span><h3>LLM-Polished Injection</h3><p>The explanation is rewritten to match the modified action.</p><div class="pattern polish" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+        <article><span class="level-n">L4</span><h3>LLM-Polished with Distribution Alignment</h3><p>The delivered response is regenerated from a mixture of model output distributions.</p><div class="pattern align" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i></div></article>
+      </div>
+    </section>
+
+    <section id="results" class="section results">
+      <div class="wrap">
+        <p class="eyebrow">EMPIRICAL RESULTS</p>
+        <h2>What the <em>runs showed.</em></h2>
+        <div class="results-tabs" role="tablist" aria-label="Research questions">
+          <button id="tab-agents" role="tab" aria-controls="agents" aria-selected="true">RQ1 <span>Agents</span></button>
+          <button id="tab-permissions" role="tab" aria-controls="permissions" aria-selected="false" tabindex="-1">RQ2 <span>Permissions</span></button>
+          <button id="tab-models" role="tab" aria-controls="models" aria-selected="false" tabindex="-1">RQ3 <span>Models</span></button>
+          <button id="tab-mitigations" role="tab" aria-controls="mitigations" aria-selected="false" tabindex="-1">RQ4 <span>Mitigations</span></button>
+        </div>
+        <div class="panel result-panel" id="agents" role="tabpanel" aria-labelledby="tab-agents" tabindex="0">
+          <h3>Injection effectiveness across agents</h3>
+          <p>All four coding agents reached <strong class="danger">0% DSR</strong> at all four injection levels under their commonly used high-permission modes.</p>
+          <div class="segmented" role="group" aria-label="Agent metric">
+            <button type="button" aria-pressed="true" data-agent-metric="dsr">DSR</button>
+            <button type="button" aria-pressed="false" data-agent-metric="tokens">Tokens</button>
+            <button type="button" aria-pressed="false" data-agent-metric="time">Time</button>
+          </div>
+          <div id="agent-table" class="table-wrap" aria-live="polite"></div>
+          <p class="note">DSR measures the share of injected malicious calls denied before execution. Tokens and time are means per turn.</p>
+        </div>
+        <div class="panel result-panel" id="permissions" role="tabpanel" aria-labelledby="tab-permissions" tabindex="0" hidden>
+          <h3>Sensitivity to permission mode</h3>
+          <p>All four coding agents achieved <strong class="danger">0% DSR</strong> across their evaluated native configurations.</p>
+          <dl class="permission-list">
+            <div><dt>Claude Code</dt><dd>plan, acceptEdits, auto, bypassPermissions</dd><dd class="danger">0% DSR</dd></div>
+            <div><dt>Codex</dt><dd>Auto, Full Access</dd><dd class="danger">0% DSR</dd></div>
+            <div><dt>Cursor</dt><dd>Auto-review, Run Everything</dd><dd class="danger">0% DSR</dd></div>
+            <div><dt>OpenCode</dt><dd>Plan, Build</dd><dd class="danger">0% DSR</dd></div>
+          </dl>
+        </div>
+        <div class="panel result-panel" id="models" role="tabpanel" aria-labelledby="tab-models" tabindex="0" hidden>
+          <h3>Sensitivity to backend model</h3>
+          <p>Router-side injection achieved <strong class="danger">0% DSR across the four backend models</strong> tested with Claude Code under L1. Task success rates and execution turns shifted by different amounts across models.</p>
+          <div class="segmented" role="group" aria-label="Backend model metric">
+            <button type="button" aria-pressed="true" data-model-metric="success">Task success</button>
+            <button type="button" aria-pressed="false" data-model-metric="turns">Average turns</button>
+          </div>
+          <div id="model-chart" class="chart" aria-live="polite"></div>
+          <a class="source-link" href="https://arxiv.org/pdf/2607.23624v5">See Figure 5 for standard deviations</a>
+        </div>
+        <div class="panel result-panel" id="mitigations" role="tabpanel" aria-labelledby="tab-mitigations" tabindex="0" hidden>
+          <h3>Effectiveness of mitigations</h3>
+          <p>Whitelist control provides a simple, model-free baseline. LLM review can achieve a more favorable balance between DSR and WBR, with results varying by reviewer and injection level.</p>
+          <div class="segmented" role="group" aria-label="Injection level">
+            <button type="button" aria-pressed="true" data-defense-level="0">L1</button>
+            <button type="button" aria-pressed="false" data-defense-level="1">L2</button>
+            <button type="button" aria-pressed="false" data-defense-level="2">L3</button>
+            <button type="button" aria-pressed="false" data-defense-level="3">L4</button>
+          </div>
+          <div id="defense-chart" class="chart" aria-live="polite"></div>
+          <p class="note">Higher DSR means more malicious calls were blocked. WBR is the share of all denied calls that were benign.</p>
+        </div>
+        <p class="note source">Results from the controlled evaluation in <a href="https://arxiv.org/abs/2607.23624v5">arXiv:2607.23624v5</a>.</p>
+      </div>
+    </section>
+
+    <section class="wrap section end">
+      <div>
+        <p class="eyebrow">THE CONTROL GAP</p>
+        <h2>Who controls the <em>next action?</em></h2>
+        <p class="section-intro">Whitelist-based execution control and LLM review do not reliably close the gap between provider output and agent execution. The findings motivate provider-supported output-integrity mechanisms.</p>
+      </div>
+      <div class="actions">
+        <a class="button primary" href="https://arxiv.org/pdf/2607.23624v5">Read PDF</a>
+        <button class="button" id="copy-citation" type="button">Copy BibTeX</button>
+      </div>
+      <pre id="citation" hidden>@article{fu2026cost,
+  title = {Where Is the Cost of Third-Party API Routers in Agentic Software Development?},
+  author = {Fu, Donghao and Li, Jingxin and Jiang, Xue and Dong, Yihong},
+  journal = {arXiv preprint arXiv:2607.23624},
+  year = {2026}
+}</pre>
+      <p id="citation-status" class="note" aria-live="polite"></p>
+    </section>
+  </main>
+  <footer class="wrap footer"><a class="brand" href="./"><img src="./mark.svg" alt="" width="21" height="21">SIDEL</a><span>* Equal contribution</span><a href="https://donghfu.github.io/">Donghao Fu</a></footer>
+</body>
+</html>
